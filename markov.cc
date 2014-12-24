@@ -38,45 +38,6 @@ const std::string punctuation = ",;:.!?";
 typedef std::map< std::string, std::vector<std::string> > database_type;
 
 /**
-  Tokenizes a given file. Any punctuation mark and any whitespace character is
-  considered a token. The function returns a container of all tokens in the
-  order in which they appear in the text. By concatenating subsequent  entries
-  with a whitespace character, the original text may be formed again.
-*/
-
-std::vector<std::string> getTokens( const std::string& filename )
-{
-  std::ifstream in( filename );
-
-  std::vector<std::string> rawTokens;
-
-  std::copy(  std::istream_iterator<std::string>( in ),
-              std::istream_iterator<std::string>(),
-              std::back_inserter( rawTokens ) );
-
-  std::vector<std::string> tokens;
-  tokens.reserve( rawTokens.size() );
-
-  for( auto&& rawToken : rawTokens )
-  {
-    // Only use the _last_ punctuation that may be found in the token. We do
-    // not want to split a chapter number or a word.
-    auto pos = rawToken.find_last_of( punctuation );
-    if( pos != std::string::npos && pos + 1 == rawToken.length() )
-    {
-      tokens.push_back( rawToken.substr( 0, pos ) );
-      tokens.push_back( rawToken.substr( pos ) );
-    }
-
-    // Simply copy the token
-    else
-      tokens.push_back( rawToken );
-  }
-
-  return tokens;
-}
-
-/**
   Joins a sequence of tokens and returns a single string. If one of the tokens
   is a punctuation mark, spurious punctuation will be avoided.
 */
@@ -128,6 +89,33 @@ template <class OutputIterator> void split( const std::string& string, OutputIte
     else
       *result++ = rawToken;
   }
+}
+
+
+/**
+  Tokenizes a given file. Any punctuation mark and any whitespace character is
+  considered a token. The function returns a container of all tokens in the
+  order in which they appear in the text. By concatenating subsequent  entries
+  with a whitespace character, the original text may be formed again.
+*/
+
+std::vector<std::string> getTokens( const std::string& filename )
+{
+  std::ifstream in( filename );
+
+  std::vector<std::string> rawTokens;
+
+  std::copy(  std::istream_iterator<std::string>( in ),
+              std::istream_iterator<std::string>(),
+              std::back_inserter( rawTokens ) );
+
+  std::vector<std::string> tokens;
+  tokens.reserve( rawTokens.size() );
+
+  for( auto&& rawToken : rawTokens )
+    split( rawToken, std::back_inserter( tokens ) );
+
+  return tokens;
 }
 
 /**
