@@ -3,4 +3,7 @@ PROJECT( Markov )
 
 SET( CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -std=c++11" )
 
-ADD_EXECUTABLE( markov markov.cc )
+ADD_EXECUTABLE( markov
+  markov.cc
+  program_options.cc
+)
