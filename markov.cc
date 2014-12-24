@@ -37,6 +37,13 @@
 const std::string punctuation = ",;:.!?";
 typedef std::map< std::string, std::vector<std::string> > database_type;
 
+/** Checks whether a string is a punctuation string */
+bool isPunctuation( const std::string& string )
+{
+  return    string.length() == 1
+         && string.find_first_of( punctuation ) != std::string::npos;
+}
+
 /**
   Joins a sequence of tokens and returns a single string. If one of the tokens
   is a punctuation mark, spurious punctuation will be avoided.
@@ -49,7 +56,7 @@ template <class InputIterator> std::string join( InputIterator begin, InputItera
   for( auto it = begin; it != end; ++it )
   {
     // Is this punctuation? If so, do not add any whitespace.
-    if( it->length() == 1 && it->find_first_of( punctuation ) != std::string::npos )
+    if( isPunctuation( *it ) )
       result += *it;
     else
     {
@@ -195,7 +202,7 @@ std::string spew( const database_type& database, unsigned int numIterations )
 
     prefix = join( prefixTokens.begin(), prefixTokens.end() );
 
-    if( !( word.length() == 1 && word.find_first_of( punctuation ) != std::string::npos ) )
+    if( !isPunctuation( word ) )
       output << " ";
 
     output << word;
@@ -209,7 +216,7 @@ int main( int, char** )
   auto tokens   = getTokens( "../King_James.txt" );
   auto database = buildDatabase( tokens, 2 );
 
-  std::cout << spew( database, 100 );
+  std::cout << spew( database, 100 ) << std::endl;
 
   return 0;
 }
