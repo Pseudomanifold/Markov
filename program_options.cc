@@ -53,4 +53,9 @@ bool ProgramOptions::has( const std::string& name, bool requireValue ) const
          && ( !requireValue || !pos->value.empty() );
 }
 
+std::vector<std::string> ProgramOptions::getPositionalOptions() const
+{
+  return _positionalOptions;
+}
+
 } // end of namespace "Markov"

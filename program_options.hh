@@ -47,6 +47,8 @@ public:
 
   bool has( const std::string& name, bool requireValue = false ) const;
 
+  std::vector<std::string> getPositionalOptions() const;
+
 private:
   std::vector<Option> _namedOptions;
   std::vector<std::string> _positionalOptions;

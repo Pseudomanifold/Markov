@@ -226,7 +226,15 @@ int main( int argc, char* argv[] )
   if( options.has( "--iterations", true ) )
     numIterations = options.get<unsigned int>( "--iterations" );
 
-  auto tokens   = getTokens( "../King_James.txt" );
+  std::vector<std::string> filenames = options.getPositionalOptions();
+  if( filenames.empty() )
+  {
+    std::cerr << "markov: Need at least a single filename to build database" << std::endl;
+    return -1;
+  }
+
+  // FIXME: Should collect different tokens from multiple files
+  auto tokens   = getTokens( filenames.front() );
   auto database = buildDatabase( tokens, prefixLength );
 
   std::cout << spew( database, numIterations ) << std::endl;
