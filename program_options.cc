@@ -41,4 +41,16 @@ ProgramOptions::ProgramOptions( int argc, char* argv[] )
   }
 }
 
+bool ProgramOptions::has( const std::string& name, bool requireValue ) const
+{
+  auto pos = std::find_if( _namedOptions.begin(), _namedOptions.end(),
+                           [&] ( const Option& option )
+                           {
+                             return option.name == name;
+                           } );
+
+  return  pos != _namedOptions.end()
+         && ( !requireValue || !pos->value.empty() );
+}
+
 } // end of namespace "Markov"
