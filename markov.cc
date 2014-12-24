@@ -34,6 +34,8 @@
 #include <string>
 #include <vector>
 
+#include "program_options.hh"
+
 const std::string punctuation = ",;:.!?";
 typedef std::map< std::string, std::vector<std::string> > database_type;
 
@@ -211,12 +213,23 @@ std::string spew( const database_type& database, unsigned int numIterations )
   return output.str();
 }
 
-int main( int, char** )
+int main( int argc, char* argv[] )
 {
-  auto tokens   = getTokens( "../King_James.txt" );
-  auto database = buildDatabase( tokens, 2 );
+  Markov::ProgramOptions options( argc, argv );
 
-  std::cout << spew( database, 100 ) << std::endl;
+  unsigned int prefixLength  = 2;
+  unsigned int numIterations = 100;
+
+  if( options.has( "--prefix", true ) )
+    prefixLength = options.get<unsigned int>( "--prefix" );
+
+  if( options.has( "--iterations", true ) )
+    numIterations = options.get<unsigned int>( "--iterations" );
+
+  auto tokens   = getTokens( "../King_James.txt" );
+  auto database = buildDatabase( tokens, prefixLength );
+
+  std::cout << spew( database, numIterations ) << std::endl;
 
   return 0;
 }
