@@ -233,8 +233,16 @@ int main( int argc, char* argv[] )
     return -1;
   }
 
-  // FIXME: Should collect different tokens from multiple files
-  auto tokens   = getTokens( filenames.front() );
+  std::vector<std::string> tokens;
+
+  for( auto&& filename : filenames )
+  {
+    auto t = getTokens( filename );
+
+    tokens.insert( tokens.end(),
+                   t.begin(), t.end() );
+  }
+
   auto database = buildDatabase( tokens, prefixLength );
 
   std::cout << spew( database, numIterations ) << std::endl;
